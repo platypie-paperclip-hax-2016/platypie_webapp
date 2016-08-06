@@ -1,6 +1,6 @@
 (function() {
 angular.module('MyApp', ['ngRoute', 'satellizer'])
-  .config(function($routeProvider, $locationProvider, $authProvider) {
+  .config(function($routeProvider, $locationProvider, $authProvider, CONSTANTS) {
     $locationProvider.html5Mode(true);
 
     $routeProvider
@@ -44,8 +44,8 @@ angular.module('MyApp', ['ngRoute', 'satellizer'])
     $authProvider.signupUrl = '/signup';
     $authProvider.facebook({
       url: '/auth/facebook',
-      clientId: '980220002068787',
-      redirectUri: 'http://localhost:3000/auth/facebook/callback'
+      clientId: CONSTANTS.FB_CLIENT_ID,
+      redirectUri: CONSTANTS.BASE_URL+'/auth/facebook/callback'
     });
 
     function skipIfAuthenticated($location, $auth) {
