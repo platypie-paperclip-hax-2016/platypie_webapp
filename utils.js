@@ -57,6 +57,9 @@ utils.createStore = function() {
         },
         getSession: function(id) {
             return sessions[id]
+        },
+        remove: function(id) {
+            delete sessions[id]
         }
 
     }

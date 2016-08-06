@@ -61,15 +61,12 @@ exports.fbMessageHook = function (req, res) {
                             text, // the user's message
                             store.getSession(sessionId).context // the user's current session state
                         ).then(function (context) {
-                            console.log('Received context from wit:' + context);
-
-                            // Based on the session state, you might want to reset the session.
-                            // This depends heavily on the business logic of your bot.
-                            // Example:
-                            // if (context['done']) {
-                            //   delete sessions[sessionId];
+                            console.log('Received context from wit:');
+                            util.inspect(context)
+                            
+                            // if (context.done) {
+                                store.remove(sessionId)
                             // }
-
                             store.getSession(sessionId).context = context;
                         })
                         .catch(function(err) {
