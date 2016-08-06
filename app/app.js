@@ -40,12 +40,14 @@ angular.module('MyApp', ['ngRoute', 'satellizer'])
         .when("/university/:id", {
             templateUrl: 'partials/university.html',
             controller: 'UniversityCtrl',
-            // resolve: {loginRequired: loginRequired}
+            controllerAs: 'main',
+            resolve: {loginRequired: loginRequired}
         })
         .when("/main", {
             templateUrl: 'partials/main.html',
             controller: 'MainCtrl',
-            // resolve: {loginRequired: loginRequired}
+            controllerAs: 'main',
+            resolve: {loginRequired: loginRequired}
         })
       .otherwise({
         templateUrl: 'partials/404.html'
@@ -68,7 +70,7 @@ angular.module('MyApp', ['ngRoute', 'satellizer'])
 
     function skipIfAuthenticated($location, $auth) {
       if ($auth.isAuthenticated()) {
-        $location.path('/');
+        $location.path('/main');
       }
     }
 

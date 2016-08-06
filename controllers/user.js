@@ -4,6 +4,7 @@ var nodemailer = require('nodemailer');
 var jwt = require('jsonwebtoken');
 var moment = require('moment');
 var request = require('request');
+var models = require("../models")
 var qs = require('querystring');
 var User = require('../models/User');
 
@@ -333,14 +334,19 @@ exports.authFacebook = function(req, res) {
             if (user) {
               return res.status(400).send({ msg: user.email + ' is already associated with another account.' })
             }
-            user = new User({
-              name: profile.name,
-              email: profile.email,
-              gender: profile.gender,
-              location: profile.location && profile.location.name,
-              picture: 'https://graph.facebook.com/' + profile.id + '/picture?type=large',
-              facebook: profile.id
-            });
+            models.City.findOne({
+              name: profile.location
+            }, function(err, city) {
+              user = new User({
+                name: profile.name,
+                email: profile.email,
+                gender: profile.gender,
+                city: city._id,
+                location: profile.location && profile.location.name,
+                picture: 'https://graph.facebook.com/' + profile.id + '/picture?type=large',
+                facebook: profile.id
+              });
+            })
             user.save(function(err) {
               return res.send({ token: generateToken(user), user: user });
             });

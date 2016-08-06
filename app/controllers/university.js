@@ -5,6 +5,6 @@
     function UniversityCtrl($routeParams) {
         var ctrl = this;
         
-
+        
     }
 })();
