@@ -13,15 +13,57 @@ function witWrapper(store) {
                 resolve()
             })
         },
+        getMajors: function(request) {
+            return new Promise(function(resolve, reject) {
+                var entities = request.entities
+                var context = request.context
+                if (entities.city) {
+                    models.University.find({
+                        city: entities.city
+                    }).populate("majors")
+                        .sort({rating: "desc"})
+                        .limit(5)
+                        .execute(function(err, uni) {
+                            if (err) reject(err.message)
+                            else if (!uni) reject("No universities found")
+                            else  {
+                                new Promise(function(res, rej) {
+                                    var currUni = 0
+                                    while (!uni[currUni].majors) {
+                                        currUni++;
+                                        if (currUni >= uni.length) {
+                                            rej("No majors found!")
+                                            break
+                                        }
+                                    }
+                                    if (currUni < uni.length) {
+                                        res(uni[currUni])
+                                    }
+                                }).then(function(uni) {
+                                    context.majorUrl = uni.majors[0].majorUrl
+                                    context.major = uni.majors[0].name
+                                    resolve(context)
+                                }, function(err) {
+                                    reject(err)
+                                })
+                            }
+                        })
+                } else {
+                    console.log("#getMajors() desired entities not found")
+                    reject("Error")
+                }
+            })
+        },
         getMajor: function(request) {
             console.log("#getMajor() called")
             return new Promise(function(resolve, reject) {
                 var context = request.context
+                var entities = request.entities
                 console.log(request.entities)
-                if (request.entities.intent) {
-
-                } else if (request.entities.major) {
-                    context.major = request.entities.major.value
+                if (entities.intent) {
+                    
+                } else if (entities.major ) {
+                    context.major = entities.major.value
                     models.Major.findOne({
                         name: context.major
                     }, function(err, major) {
@@ -100,7 +142,8 @@ function witWrapper(store) {
                     reject("Error")
                 }
             })
-        }
+        },
+
     }
 
     return new Wit({
