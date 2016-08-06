@@ -1,12 +1,12 @@
 (function() {
     angular.module('MyApp')
-        .factory('University', University);
+        .factory('Major', Major);
     University.$inject = ['$http'];
-    
-    function University($http) {
+
+    function Major($http) {
         return {
             getInfo: function(id) {
-                return $http.get("/university", {
+                return $http.get("/major", {
                     params: {
                         _id: id
                     }
