@@ -17,6 +17,9 @@ coverage
 # API keys
 .env
 
+public/js/*.js
+public/css/*.css
+
 # Dependency directory
 node_modules
 bower_components
