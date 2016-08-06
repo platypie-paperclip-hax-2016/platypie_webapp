@@ -1,3 +1,5 @@
+var fs = require('fs');
+var https = require('https');
 var express = require('express');
 var path = require('path');
 var logger = require('morgan');
@@ -81,16 +83,27 @@ app.get('*', function(req, res) {
   res.redirect('/#' + req.originalUrl);
 });
 
-// Production error handler
 if (app.get('env') === 'production') {
+	// Production error handler
   app.use(function(err, req, res, next) {
     console.error(err.stack);
     res.sendStatus(err.status || 500);
   });
 }
 
-app.listen(app.get('port'), function() {
-  console.log('Express server listening on port ' + app.get('port'));
-});
+if (app.get('port') == 80) {
+  const server = https.createServer({
+		ca: fs.readFileSync("/home/ubuntu/ca.pem"),
+    key: fs.readFileSync("/home/ubuntu/privkey.pem"),
+    cert: fs.readFileSync("/home/ubuntu/cert.pem")
+  }, app)
+	server.listen(80, function() {
+		console.log('HTTPS Express server listening on port ' + 80);
+	});
+}
+else {
+	app.listen(app.get('port'), function() {
+		console.log('Express server listening on port ' + app.get('port'));
+	});
+}
 
-module.exports = app;
