@@ -76,12 +76,14 @@ function witWrapper(store) {
                             }
                         })
                     }).then(function(city) {
-                        models.University.populate("majors").findOne({
+                        models.University.findOne({
                             majors: {
                                 name: entities.major[0].value
                             },
                             city: city
-                        }, function(err, uni) {
+                        })
+                            .populate("majors")
+                            .exec(function(err, uni) {
                             if (err) reject(err.message)
                             else if (!uni) reject("University not found")
                             else {
