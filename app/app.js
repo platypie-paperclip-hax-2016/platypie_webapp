@@ -20,6 +20,7 @@ angular.module('MyApp', ['ngRoute', 'satellizer'])
       .when('/signup', {
         templateUrl: 'partials/signup.html',
         controller: 'SignupCtrl',
+          controllerAs: "main",
         resolve: { skipIfAuthenticated: skipIfAuthenticated }
       })
       .when('/account', {

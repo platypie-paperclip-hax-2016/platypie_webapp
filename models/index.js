@@ -21,7 +21,7 @@ const MajorSchema = new Schema({
 
 const IndustrySchema = new Schema({
     name: String,
-    wikiUrl: String,
+    websiteUrl: String,
     summary: String,
     majors: [{type: Schema.Types.Object, ref: 'Major'}],
     jobs: [String]
@@ -29,7 +29,7 @@ const IndustrySchema = new Schema({
 
 const CitySchema = new Schema({
     name: String,
-    wikiUrl: String,
+    websiteUrl: String,
     industries: [{type: Schema.Types.Object, ref: 'Industry'}],
     latlng: String,
     country: String
