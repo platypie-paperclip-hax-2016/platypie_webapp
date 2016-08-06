@@ -17,9 +17,11 @@ function witWrapper(store) {
             return new Promise(function(resolve, reject) {
                 var entities = request.entities
                 var context = request.context
-                if (entities.city) {
+                console.log("#getMajors() entered")
+                console.log(entities)
+                if (entities.location && entities.intent.university) {
                     models.University.find({
-                        city: entities.city
+                        city: entities.location
                     }).populate("majors")
                         .sort({rating: "desc"})
                         .execute(function(err, uni) {
@@ -40,12 +42,29 @@ function witWrapper(store) {
                                     }
                                 }).then(function(uni) {
                                     for (var i = 0; i < uni.majors.length; i++) {
-                                        context["major"+i] = uni.majors[i].majorUrl
+                                        context["major"+i] = process.env.BASE_URL +"/major/" + uni.majors[i]._id
                                     }
+                                    context.university = uni.name
                                     resolve(context)
                                 }, function(err) {
                                     reject(err)
                                 })
+                            }
+                        })
+                } else if (entities.intent.majors && entities.university) {
+                    models.University.findOne({
+                        name: entities.university.value
+                    })
+                        .populate("majors")
+                        .execute(function(err, uni) {
+                            if (err) reject(err.message)
+                            else if (!uni) reject("University not found")
+                            else {
+                                context.university = uni.name
+                                for (var i = 0; i < uni.majors.length; i++) {
+                                    context["major"+i] = process.env.BASE_URL + "/major/" + uni.majors[i]._id
+                                }
+                                resolve(context)
                             }
                         })
                 } else {
@@ -108,34 +127,20 @@ function witWrapper(store) {
                 let {entities, context} = request
                 console.log(entities)
                 if (entities.location || entities.major) {
-                    new Promise(function(res, rej) {
-                        User.findOne({
-                            fbId: store.getSession(request.sessionId).fbid
-                        }, function(err, city) {
-                            if (err) rej(err)
-                            if (!city) rej(new Error("City not found"))
-                            else {
-                                resolve(city._id)
-                            }
-                        })
-                    }).then(function(city) {
-                        models.University.findOne({
-                            majors: {
-                                name: entities.major[0].value
-                            },
-                            city: city
-                        })
-                            .populate("majors")
-                            .exec(function(err, uni) {
-                            if (err) reject(err.message)
-                            else if (!uni) reject("University not found")
-                            else {
-                                context.university = uni.name
-                                context.universityUrl = process.env.BASE_URL + "/university/" + uni._id
-                            }
-                        })
-                    }, function(err) {
-                        reject(err.message)
+                    models.University.findOne({
+                        majors: {
+                            name: entities.major[0].value
+                        },
+                        city: entities.location[0].value
+                    })
+                        .populate("majors")
+                        .exec(function(err, uni) {
+                        if (err) reject(err.message)
+                        else if (!uni) reject("University not found")
+                        else {
+                            context.university = uni.name
+                            context.universityUrl = process.env.BASE_URL + "/university/" + uni._id
+                        }
                     })
                 } else {
                     console.log("#getUniversity() desired entities not found")
