@@ -1,6 +1,7 @@
 var crypto = require('crypto');
 var bcrypt = require('bcrypt-nodejs');
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema
 
 var schemaOptions = {
   timestamps: true,
@@ -9,7 +10,7 @@ var schemaOptions = {
   }
 };
 
-var userSchema = new mongoose.Schema({
+var userSchema = new Schema({
   name: String,
   email: { type: String, unique: true},
   password: String,
