@@ -19,9 +19,9 @@ function witWrapper(store) {
                 var context = request.context
                 console.log("#getMajors() entered")
                 console.log(entities)
-                if (entities.location && entities.intent.university) {
+                if (entities.location && entities.intent[0].university) {
                     models.University.find({
-                        city: entities.location
+                        city: entities.location[0].value
                     }).populate("majors")
                         .sort({rating: "desc"})
                         .execute(function(err, uni) {
@@ -53,7 +53,7 @@ function witWrapper(store) {
                         })
                 } else if (entities.intent.majors && entities.university) {
                     models.University.findOne({
-                        name: entities.university.value
+                        name: entities.university[0].value
                     })
                         .populate("majors")
                         .execute(function(err, uni) {
@@ -80,9 +80,9 @@ function witWrapper(store) {
                 var entities = request.entities
                 console.log(request.entities)
                 if (entities.intent) {
-                    
-                } else if (entities.major ) {
-                    context.major = entities.major.value
+                    //popular major in hk
+                } else if (entities.major) {
+                    context.major = entities.major[0].value
                     models.Major.findOne({
                         name: context.major
                     }, function(err, major) {
@@ -106,7 +106,7 @@ function witWrapper(store) {
                 var entities = request.entities
                 var context = request.context
                 if (entities.university) {
-                    var universityName = entities.university.value
+                    var universityName = entities.university[0].value
                     models.University.findOne({name: universityName}, function(err, uni) {
                         if (err) reject(err.message)
                         else if (!uni) reject("University not found")
