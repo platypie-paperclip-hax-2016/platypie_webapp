@@ -45,7 +45,14 @@ angular.module('MyApp', ['ngRoute', 'satellizer'])
     $authProvider.facebook({
       url: '/auth/facebook',
       clientId: CONSTANTS.FB_CLIENT_ID,
-      redirectUri: CONSTANTS.BASE_URL+'/auth/facebook/callback'
+      redirectUri: CONSTANTS.BASE_URL+'/auth/facebook/callback',
+        authorizationEndpoint: 'https://www.facebook.com/v2.5/dialog/oauth',
+        scope: ['email', 'public_profile', 'user_location', 'user_education_history'],
+        scopeDelimiter: ',',
+        display: 'popup',
+        oauthType: '2.0',
+        popupOptions: { width: 580, height: 400 }
+
     });
 
     function skipIfAuthenticated($location, $auth) {

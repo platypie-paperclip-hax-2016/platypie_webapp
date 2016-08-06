@@ -73,7 +73,7 @@ app.get('/unlink/:provider', userController.ensureAuthenticated, userController.
 app.post('/auth/facebook', userController.authFacebook);
 app.get('/auth/facebook/callback', userController.authFacebookCallback);
 app.get('/bot/fb/messages', botController.fbVerifyHook)
-app.post('/bot/fb/message', botController.fbMessageHook)
+app.post('/bot/fb/messages', botController.fbMessageHook)
 
 app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'app', 'index.html'));
