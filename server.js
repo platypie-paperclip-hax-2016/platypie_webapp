@@ -23,6 +23,10 @@ var User = require('./models/User');
 var userController = require('./controllers/user');
 var contactController = require('./controllers/contact');
 var botController = require("./controllers/bot")
+var universityController = require('./controllers/university')
+var majorController = require('./controllers/major')
+var industryController = require('./controllers/industry')
+var cityController = require('./controllers/city')
 
 var app = express();
 
@@ -74,6 +78,15 @@ app.post('/auth/facebook', userController.authFacebook);
 app.get('/auth/facebook/callback', userController.authFacebookCallback);
 app.get('/bot/fb/messages', botController.fbVerifyHook)
 app.post('/bot/fb/messages', botController.fbMessageHook)
+
+app.post('/api/university', universityController.create)
+app.get('/api/university', universityController.find)
+app.post('/api/major', majorController.create)
+app.get('/api/major', majorController.find)
+app.post('/api/industry', industryController.create)
+app.get('/api/industry', industryController.find)
+app.post('/api/city', cityController.create)
+app.get('/api/city', cityController.find)
 
 app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'app', 'index.html'));
