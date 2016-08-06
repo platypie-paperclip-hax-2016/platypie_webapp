@@ -41,13 +41,13 @@ angular.module('MyApp', ['ngRoute', 'satellizer'])
             templateUrl: 'partials/university.html',
             controller: 'UniversityCtrl',
             controllerAs: 'main',
-            // resolve: {loginRequired: loginRequired}
+            resolve: {loginRequired: loginRequired}
         })
         .when("/main", {
             templateUrl: 'partials/main.html',
             controller: 'MainCtrl',
             controllerAs: 'main',
-            // resolve: {loginRequired: loginRequired}
+            resolve: {loginRequired: loginRequired}
         })
       .otherwise({
         templateUrl: 'partials/404.html'
