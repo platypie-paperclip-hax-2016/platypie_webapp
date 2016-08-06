@@ -1,5 +1,6 @@
 var fbMessage = require("../utils").fbMessage
 var models = require("../models")
+var User = require("../models/User")
 var Wit = require("node-wit").Wit
 
 function witWrapper(store) {
@@ -66,7 +67,7 @@ function witWrapper(store) {
                 console.log(entities)
                 if (entities.location || entities.major) {
                     new Promise(function(res, rej) {
-                        models.User.findOne({
+                        User.findOne({
                             fbId: store.getSession(request.sessionId).fbid
                         }, function(err, city) {
                             if (err) rej(err)
