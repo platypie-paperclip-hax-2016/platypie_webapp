@@ -10,7 +10,7 @@ const UniversitySchema = new Schema({
     summary: String,
     applicationDeadline: Date,
     city: {type: Schema.Types.ObjectId, ref: 'City'},
-    rank: Number
+    rating: Number
 })
 
 const MajorSchema = new Schema({

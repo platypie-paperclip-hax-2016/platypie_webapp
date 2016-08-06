@@ -4,10 +4,20 @@ const Promise = require('bluebird')
 mongoose.Promise = Promise
 
 exports.create = function (req, res, next) {
-  const city = new models.City(req.body)
-  city.save()
-  .then(() => res.send(city))
-  .catch(err => next(err))
+  if (Array.isArray(req.body)) {
+    Promise.all(req.body.map(c => {
+      const city = new models.City(req.body)
+      return city.save()
+    }))
+    .then(() => res.send(req.body))
+    .catch(err => next(err))
+  }
+  else {
+    const city = new models.City(req.body)
+    city.save()
+    .then(() => res.send(city))
+    .catch(err => next(err))
+  }
 }
 
 exports.find = function (req, res, next) {
