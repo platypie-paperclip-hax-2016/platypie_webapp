@@ -22,7 +22,6 @@ function witWrapper(store) {
                         city: entities.city
                     }).populate("majors")
                         .sort({rating: "desc"})
-                        .limit(5)
                         .execute(function(err, uni) {
                             if (err) reject(err.message)
                             else if (!uni) reject("No universities found")
@@ -40,8 +39,9 @@ function witWrapper(store) {
                                         res(uni[currUni])
                                     }
                                 }).then(function(uni) {
-                                    context.majorUrl = uni.majors[0].majorUrl
-                                    context.major = uni.majors[0].name
+                                    for (var i = 0; i < uni.majors.length; i++) {
+                                        context["major"+i] = uni.majors[i].majorUrl
+                                    }
                                     resolve(context)
                                 }, function(err) {
                                     reject(err)
