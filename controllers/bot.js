@@ -65,7 +65,7 @@ exports.fbMessageHook = function (req, res) {
                             util.inspect(context)
                             
                             // if (context.done) {
-                                store.remove(sessionId)
+                            store.remove(sessionId)
                             // }
                             store.getSession(sessionId).context = context;
                         })
