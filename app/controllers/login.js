@@ -6,8 +6,10 @@ LoginCtrl.$inject = ['$scope', '$rootScope', '$location', '$window', '$auth'];
 
 function LoginCtrl($scope, $rootScope, $location, $window, $auth) {
     var ctrl = this;
+    
     ctrl.login = login;
     ctrl.authenticate = authenticate;
+
 
     function login() {
         $auth.login($scope.user)

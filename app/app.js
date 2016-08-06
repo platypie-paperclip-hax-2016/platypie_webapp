@@ -14,6 +14,7 @@ angular.module('MyApp', ['ngRoute', 'satellizer'])
       .when('/login', {
         templateUrl: 'partials/login.html',
         controller: 'LoginCtrl',
+        controllerAs: 'main',
         resolve: { skipIfAuthenticated: skipIfAuthenticated }
       })
       .when('/signup', {
@@ -43,7 +44,7 @@ angular.module('MyApp', ['ngRoute', 'satellizer'])
     $authProvider.loginUrl = '/login';
     $authProvider.signupUrl = '/signup';
     $authProvider.facebook({
-      url: '/auth/facebook',
+      url: CONSTANTS.BASE_URL+'/auth/facebook',
       clientId: CONSTANTS.FB_CLIENT_ID,
       redirectUri: CONSTANTS.BASE_URL+'/auth/facebook/callback',
         authorizationEndpoint: 'https://www.facebook.com/v2.5/dialog/oauth',

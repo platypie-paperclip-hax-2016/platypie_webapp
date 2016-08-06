@@ -24,6 +24,7 @@ gulp.task('sass', function() {
 gulp.task('angular', function() {
   return gulp.src([
     'app/app.js',
+      'app/constants.js',
     'app/controllers/*.js',
     'app/services/*.js'
   ])
