@@ -4,6 +4,9 @@ const Schema = mongoose.Schema
 const UniversitySchema = new Schema({
     name: String,
     majors: [{type: Schema.Types.ObjectId, ref: 'Major'}],
+    website: String,
+    establishedDate: Date,
+    summary: String,
     applicationDeadline: Date,
     city: {type: Schema.Types.ObjectId, ref: 'City'},
     rank: Number
