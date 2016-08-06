@@ -1,7 +1,7 @@
 (function() {
     angular.module('MyApp')
         .factory('Major', Major);
-    University.$inject = ['$http'];
+    Major.$inject = ['$http'];
 
     function Major($http) {
         return {
