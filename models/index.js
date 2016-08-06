@@ -15,7 +15,7 @@ const UniversitySchema = new Schema({
 
 const MajorSchema = new Schema({
     name: String,
-    wikiUrl: String,
+    websiteUrl: String,
     courses: [String]
 })
 
