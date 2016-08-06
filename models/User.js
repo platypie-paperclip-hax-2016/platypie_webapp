@@ -23,7 +23,14 @@ var userSchema = new mongoose.Schema({
   twitter: String,
   google: String,
   github: String,
-  vk: String
+  vk: String,
+  fbId: String,
+  enrolledAt: [{
+    endYear: Number,
+    university: {type: Schema.Types.ObjectId, ref: 'University'},
+    major: {type: Schema.Types.ObjectId, ref: 'Major'}
+  }],
+  city: {type: Schema.Types.ObjectId, ref: 'City'}
 }, schemaOptions);
 
 userSchema.pre('save', function(next) {

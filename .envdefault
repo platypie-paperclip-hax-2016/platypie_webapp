@@ -1,0 +1,9 @@
+MAILGUN_USERNAME=mailgun
+MAILGUN_PASSWORD=mailgun
+MONGODB='localhost'
+TOKEN_SECRET=token_secret
+FACEBOOK_SECRET=fb_secret
+FB_VERIFY_TOKEN=platypie_token
+FB_ACCESS_TOKEN=fb_access_token
+AI_ACCESS_TOKEN=token
+BASE_ROUTE=your_base_route
