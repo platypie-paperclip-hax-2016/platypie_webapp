@@ -23,14 +23,14 @@ const IndustrySchema = new Schema({
     name: String,
     websiteUrl: String,
     summary: String,
-    majors: [{type: Schema.Types.Object, ref: 'Major'}],
+    majors: [{type: Schema.Types.ObjectId, ref: 'Major'}],
     jobs: [String]
 })
 
 const CitySchema = new Schema({
     name: String,
     websiteUrl: String,
-    industries: [{type: Schema.Types.Object, ref: 'Industry'}],
+    industries: [{type: Schema.Types.ObjectId, ref: 'Industry'}],
     latlng: String,
     country: String
 })
