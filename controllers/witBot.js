@@ -115,6 +115,7 @@ function witWrapper(store) {
                         else if (!uni) reject("University not found")
                         else {
                             context.application_deadline = uni.applicationDeadline
+                            context.university = uni.name
                             resolve(context)
                         }
                     })
