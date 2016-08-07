@@ -158,6 +158,18 @@ function witWrapper(store) {
                                 })
                         }
                     })
+                } else if (entities.university) {
+                    models.University.findOne({
+                        name: entities.university[0].value
+                    }, function(err, uni) {
+                        if (err) reject(err)
+                        else if (!uni) reject("University not found")
+                        else {
+                            context.university = uni.name
+                            context.universityUrl = uni.websiteUrl
+                            resolve(context)
+                        }
+                    })
                 } else {
                     console.log("#getUniversity() desired entities not found")
                     reject("Error")
