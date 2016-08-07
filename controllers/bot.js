@@ -50,7 +50,6 @@ exports.fbMessageHook = function (req, res) {
                     } else if (text) {
                         // We received a text message
                         console.log("Message received:" + text)
-                        fbMessage(sender, "Message received")
                         // wit.converse(sessionId, text, store.getSession(sessionId).context)
                         //     .then(function(data) {
                         //         console.log("Received response from wit")

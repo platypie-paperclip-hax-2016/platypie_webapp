@@ -74,8 +74,33 @@ function witWrapper(store) {
                     console.log("#getMajors() desired entities not found")
                     reject("Error")
                 }
+            }).catch(function(err) {
+                fbMessage(store.getSession(request.sessionId).fbId, err)
             })
         },
+        // getMajorByLocation: function(request) {
+        //     return new Promise(function (resolve, reject) {
+        //         console.log("#getMajorByLocation()")
+        //         var {entities, context} = request
+        //         if (entities.location) {
+        //             models.City.findOne({
+        //                 name: entities.location[0].value
+        //             }, function(err, loc) {
+        //                 if (err) reject(err.message)
+        //                 else if (!loc) reject("Platypie was not able to find your location")
+        //                 else {
+        //                     major
+        //                     resolve(context)
+        //                 }
+        //             })
+        //         } else {
+        //             reject("Platypie was not able to fulfil your request")
+        //         }
+        //     }).catch(function(err) {
+        //         fbMessage(store.getSession(request.sessionId).fbId, err)
+        //     })
+        //
+        // },
         getMajor: function (request) {
             console.log("#getMajor() called")
             return new Promise(function (resolve, reject) {
@@ -99,8 +124,10 @@ function witWrapper(store) {
                     })
                 } else {
                     console.log("#getMajor() desired entities not found")
-                    reject("Error")
+                    reject("Platypie")
                 }
+            }).catch(function(err) {
+                fbMessage(store.getSession(request.sessionId).fbId, err)
             })
         },
         getApplicationDeadline: function (request) {
@@ -121,23 +148,50 @@ function witWrapper(store) {
                     })
                 } else {
                     console.log("#getMajor() desired entities not found")
-                    reject("Error")
+                    reject("Platypie")
                 }
+            }).catch(function(err) {
+                fbMessage(store.getSession(request.sessionId).fbId, err)
             })
         },
-        getUniversity: function (request) {
+        getUniversityOnly: function(request) {
+            return new Promise(function (resolve, reject) {
+                let {entities, context} = request
+                models.University.findOne({
+                    name: entities.university[0].value
+                }, function (err, uni) {
+                    if (err) reject(err.message)
+                    else if (!major) reject("Platypie can't find your university")
+                    else {
+                        context.university = uni.name
+                        context.universityUrl = process.env.BASE_URL + "/university/" + uni._id
+                        resolve(context)
+                    }
+                })
+            })
+        },
+        getUniversity: function(request) {
             console.log("#getUniversity() called")
             return new Promise(function (resolve, reject) {
                 let {entities, context} = request
                 console.log(entities)
-                if (entities.location || entities.major) {
-                    console.log(major)
-                    models.Major.find({
-                        name: entities.major[0].value
-                    }, function (err, major) {
-                        if (err) reject(err)
-                        else if (!major) reject("Major not found")
-                        else {
+                models.Major.find({
+                    name: entities.major[0].value
+                }, function (err, major) {
+                    if (err) reject(err)
+                    else {
+                        new Promise(function(res, rej) {
+                            if (!entities.location) {
+                                res(null)
+                            } else {
+                                models.City.findOne({
+                                    name: entities.location[0].value
+                                }, function(err, city) {
+                                    if (err) rej(err.message)
+                                    res(city)
+                                })
+                            }
+                        }).then(function(city) {
                             models.University
                                 .findOne({
                                     majors: {
@@ -145,7 +199,7 @@ function witWrapper(store) {
                                             $eq: major._id
                                         }
                                     },
-                                    city: entities.location[0].value
+                                    city: city._id
                                 })
                                 .populate("majors")
                                 .exec(function (err, uni) {
@@ -157,24 +211,13 @@ function witWrapper(store) {
                                         resolve(context)
                                     }
                                 })
-                        }
-                    })
-                } else if (entities.university) {
-                    models.University.findOne({
-                        name: entities.university[0].value
-                    }, function(err, uni) {
-                        if (err) reject(err)
-                        else if (!uni) reject("University not found")
-                        else {
-                            context.university = uni.name
-                            context.universityUrl = uni.websiteUrl
-                            resolve(context)
-                        }
-                    })
-                } else {
-                    console.log("#getUniversity() desired entities not found")
-                    reject("Error")
-                }
+                        }, function(err) {
+                            reject(err)
+                        })
+                    }
+                })
+            }).catch(function(err) {
+                fbMessage(store.getSession(request.sessionId).fbId, err)
             })
         },
         getIndustry: function (request) {
@@ -194,7 +237,18 @@ function witWrapper(store) {
                             resolve(context)
                         }
                     })
-                } else if (entities.intent[0].value == 'industry' && entities.major) {
+                } else {
+                    console.log("#getIndustry() entities not found")
+                    reject("Platypie was unable to fulfil your request")
+                }
+            }).catch(function(err) {
+                fbMessage(store.getSession(request.sessionId).fbId, err)
+            })
+        },
+        getIndustryByMajor: function(request) {
+            return new Promise(function(resolve, reject) {
+                var {entities, context} = request
+                if (entities.intent[0].value == 'industry' && entities.major) {
                     models.Major.findOne({
                         name: entities.major[0].value
                     }, function (err, major) {
@@ -220,9 +274,18 @@ function witWrapper(store) {
                         }
                     })
                 } else {
-                    console.log("#getIndustry() entities not found")
-                    reject("Error")
+                    console.log("#getIndustryByMajor() entities not found")
+                    reject("Platypie was unable to fulfil your request")
                 }
+            }).catch(function(err) {
+                fbMessage(store.getSession(request.sessionId).fbId, err)
+            })
+        },
+        sampleAction: function(request) {
+            return new Promise(function(resolve, reject) {
+                var context = request.context
+                context.webHook = process.env.BASE_URL
+                resolve(context)
             })
         }
     }
