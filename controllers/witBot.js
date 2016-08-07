@@ -7,6 +7,7 @@ function witWrapper(store) {
 
     var actions = {
         send: function (request, response) {
+            console.log(request)
             console.log("#send() called")
             console.log(response)
             return new Promise(function (resolve, reject) {
